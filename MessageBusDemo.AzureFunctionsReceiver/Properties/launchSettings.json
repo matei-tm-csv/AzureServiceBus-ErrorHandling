@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MessageBusDemo.AzureFunctionsReceiver": {
+      "commandName": "Project",
+      "commandLineArgs": "host start --pause-on-error --port 26210"
+    }
+  }
+}

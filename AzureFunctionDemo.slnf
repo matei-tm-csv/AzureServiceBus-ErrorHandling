@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "AzureServiceBusErrorHandling.sln",
+    "projects": [
+      "MessageBusDemo.AzureFunctionSender\\MessageBusDemo.AzureFunctionSender.csproj",
+      "MessageBusDemo.AzureFunctionsReceiver\\MessageBusDemo.AzureFunctionsReceiver.csproj",
+      "MessageBusDemo.CommonHelpers\\MessageBusDemo.CommonHelpers.csproj"
+    ]
+  }
+}

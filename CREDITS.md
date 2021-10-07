@@ -1,0 +1,1 @@
+Thanks to [Alan Smith](https://github.com/asith-w) demo provided on https://github.com/asith-w/azure-service-bus-in-depth/tree/master/09/demos/ErrorHandling
