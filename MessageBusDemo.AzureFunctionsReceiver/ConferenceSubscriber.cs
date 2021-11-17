@@ -1,15 +1,23 @@
 using System;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using MessageBusDemo.AzureFunctionSender;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace MessageBusDemo.AzureFunctionsReceiver
 {
     public class ConferenceSubscriber
     {
+        /// <summary>
+        /// this value should be lower than "MaxDeliveryCount" property of the subscription
+        /// </summary>
+        private const int MaxAllowedDeliveryCount = 3;
+
         [FixedDelayRetry(2, "00:00:03")]
         [FunctionName("ConferenceSubscriber")]
         public async Task Run(
@@ -20,13 +28,14 @@ namespace MessageBusDemo.AzureFunctionsReceiver
             string lockToken,
             ILogger log)
         {
-            if (deliveryCount > 1 && deliveryCount < 3)
-            {
-                return;
-            }
-
             try
             {
+                if (deliveryCount > 1 && deliveryCount < MaxAllowedDeliveryCount)
+                {
+                    log.LogInformation($"The delivery #{deliveryCount} will be skipped for demo purposes. The next message will be delivered after LockDuration timeout");
+                    return;
+                }
+
                 log.LogInformation(
                     $"Thank you. We will attend the conference #{conference.ConferenceId} on room {conference.RoomName}");
 
@@ -55,7 +64,7 @@ namespace MessageBusDemo.AzureFunctionsReceiver
                 log.LogInformation($"An error occurred on delivery #{deliveryCount}");
                 log.LogError(e, e.Message);
 
-                if (deliveryCount == 3)
+                if (deliveryCount >= MaxAllowedDeliveryCount)
                 {
                     log.LogInformation($"We will explicitly dead-lettering based on lockToken {lockToken}");
                     await messageReceiver.DeadLetterAsync(lockToken, e.Message, e.ToString());
@@ -63,10 +72,13 @@ namespace MessageBusDemo.AzureFunctionsReceiver
                 else
                 {
                     // throw vs AbandonAsync discussion
-                    //await messageReceiver.AbandonAsync(lockToken);
+
+                    // AbandonAsync will not use the function retry policy
+                    // await messageReceiver.AbandonAsync(lockToken);
+
+                    //throw will enter the function retry policy
                     throw;
                 }
-
             }
         }
 
