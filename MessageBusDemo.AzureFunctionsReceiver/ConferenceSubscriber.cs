@@ -10,6 +10,7 @@ namespace MessageBusDemo.AzureFunctionsReceiver
 {
     public class ConferenceSubscriber
     {
+        [FixedDelayRetry(2, "00:00:03")]
         [FunctionName("ConferenceSubscriber")]
         public async Task Run(
             [ServiceBusTrigger("conferences","mysubscription", Connection = "AzureWebJobsServiceBus")]
@@ -19,6 +20,11 @@ namespace MessageBusDemo.AzureFunctionsReceiver
             string lockToken,
             ILogger log)
         {
+            if (deliveryCount > 1 && deliveryCount < 3)
+            {
+                return;
+            }
+
             try
             {
                 log.LogInformation(
@@ -58,8 +64,9 @@ namespace MessageBusDemo.AzureFunctionsReceiver
                 {
                     // throw vs AbandonAsync discussion
                     //await messageReceiver.AbandonAsync(lockToken);
-                    //throw;
+                    throw;
                 }
+
             }
         }
 
