@@ -1,0 +1,8 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=false",
+    "AzureWebJobsServiceBus": "Endpoint=sb://dmsb01.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=**yourdemoapikey**",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
+  }
+}
