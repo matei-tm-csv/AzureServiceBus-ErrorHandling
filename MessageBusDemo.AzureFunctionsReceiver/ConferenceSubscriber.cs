@@ -1,12 +1,8 @@
 using System;
-using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 using MessageBusDemo.AzureFunctionSender;
-using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace MessageBusDemo.AzureFunctionsReceiver
